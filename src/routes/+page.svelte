@@ -16,13 +16,13 @@
 <div
 	class="fixed top-0 z-20 flex h-screen w-screen items-center justify-center mix-blend-difference backdrop-invert"
 >
-	<h1 class="text-center text-[16rem]">Rennaisance.</h1>
+	<h1 class="text-center text-[16rem] select-none">Rennaisance.</h1>
 </div>
 
-<div class="fixed z-10 h-[50vh] w-screen bg-black" style="top: {-progress * 50}vh"></div>
-<div class="fixed z-10 h-[50vh] w-screen bg-white" style="top: {50 + progress * 50}vh"></div>
+<div class="fixed z-10 h-[50vh] w-screen bg-white" style="bottom: {-progress * 50}vh"></div>
 
 <div class="z-0 h-[50vh] w-screen bg-black"></div>
+
 <enhanced:img
 	src={CreationOfAdam}
 	alt="creation of adam"
