@@ -4,14 +4,15 @@
 
 @font-face {
 	font-family: 'LeMurmure';
-	src: url('$lib/assets/fonts/LeMurmure-Regular.woff2') format('woff2');
+	src: url('$lib/assets/fonts/le-murmure.woff2') format('woff2');
 	font-style: normal;
+	font-display: swap;
 }
 
 *,
 *::before,
 *::after {
-	font-family: 'LeMurmure';
+	font-family: 'LeMurmure', serif;
 }
 
 html,
