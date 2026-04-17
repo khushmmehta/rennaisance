@@ -1,43 +1,46 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Canvas } from '@threlte/core';
+	import { setScene } from '$lib/context';
+	import HeroScene from '$lib/components/hero-scene.svelte';
 	import CreationOfAdam from '$lib/assets/Creación_de_Adán.jpg?enhanced';
+	import { PCFShadowMap } from 'three';
 
-	let progress = $state(0);
+	let scene = $state({
+		progress: 0
+	});
+
 	let heroTextHeight = $state(0);
+	let viewport: VisualViewport;
 
 	onMount(() => {
-		const vv = window.visualViewport!;
+		viewport = window.visualViewport!;
 
-		const updateMetrics = () => {
-			heroTextHeight = document.getElementById('heroText')!.offsetHeight;
-			// Recalculate progress against the live viewport height
-			const vh = vv.height ?? window.innerHeight;
-			progress = Math.min(scrollY / (vh / 2), 1);
-		};
-
-		const onScroll = () => {
-			const vh = vv.height ?? window.innerHeight;
-			progress = Math.min(scrollY / (vh / 2), 1);
-		};
-
-		window.addEventListener('scroll', onScroll);
-		// Fires continuously while the address bar is mid-transition
-		vv.addEventListener('resize', updateMetrics);
-		// Fallback for browsers without visualViewport
-		window.addEventListener('resize', updateMetrics);
-
-		updateMetrics();
-
-		return () => {
-			window.removeEventListener('scroll', onScroll);
-			vv.removeEventListener('resize', updateMetrics);
-			window.removeEventListener('resize', updateMetrics);
-		};
+		getHeroTextHeight();
+		updateProgress();
 	});
+
+	function getHeroTextHeight() {
+		heroTextHeight = document.getElementById('heroText')!.offsetHeight;
+	}
+
+	function updateProgress() {
+		scene.progress = Math.min(scrollY / (viewport.height * 0.5), 1);
+	}
+
+	setScene(scene);
 </script>
 
+<svelte:window
+	onscroll={updateProgress}
+	onresize={() => {
+		getHeroTextHeight();
+		updateProgress();
+	}}
+/>
+
 <div
-	class="fixed z-20 flex w-screen items-center justify-center mix-blend-difference backdrop-invert"
+	class="fixed z-20 flex w-screen items-center justify-center mix-blend-difference"
 	style="top: calc(50dvh - {heroTextHeight * 0.5}px);"
 >
 	<h1
@@ -48,15 +51,23 @@
 	</h1>
 </div>
 
-<div class="fixed z-10 w-screen bg-white" style="height: 50dvh; bottom: {-progress * 50}dvh;"></div>
+<div
+	class="fixed z-10 w-screen bg-black"
+	style="height: 50dvh; bottom: {-scene.progress * 50}dvh;"
+></div>
 
 <div class="z-0 w-screen bg-black" style="height: 50dvh;"></div>
+
+<div class="fixed top-0 z-15 h-dvh w-dvw">
+	<Canvas shadows={PCFShadowMap}>
+		<HeroScene />
+	</Canvas>
+</div>
 
 <enhanced:img
 	src={CreationOfAdam}
 	alt="creation of adam"
-	class="z-0 w-dvw object-cover"
-	style="height: 100dvh;"
+	class="z-0 size-screen object-cover"
 	sizes="min(4256px, 200vw)"
 	fetchpriority="high"
 	loading="eager"
