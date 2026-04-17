@@ -67,7 +67,7 @@
 <enhanced:img
 	src={CreationOfAdam}
 	alt="creation of adam"
-	class="z-0 size-screen object-cover"
+	class="z-0 h-dvh w-dvw object-cover"
 	sizes="min(4256px, 200vw)"
 	fetchpriority="high"
 	loading="eager"
